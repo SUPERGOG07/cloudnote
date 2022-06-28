@@ -5,6 +5,7 @@ import com.superdog.cloudnote.common.R;
 import com.superdog.cloudnote.pojo.User;
 import com.superdog.cloudnote.service.UserService;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.DigestUtils;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,6 +23,7 @@ public class UserController {
     private UserService userService;
 
     @PostMapping("/register")
+    @ApiOperation("注册")
     public R<String> register(@RequestBody User user){
         log.info("注册请求-->{}",user.toString());
 
@@ -43,6 +45,7 @@ public class UserController {
     }
 
     @PostMapping("/login")
+    @ApiOperation("登陆")
     public R<User> login(@RequestBody User user){
         log.info("登陆请求-->{}",user.getUserName());
 
