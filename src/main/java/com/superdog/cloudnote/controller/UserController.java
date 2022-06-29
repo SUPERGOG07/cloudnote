@@ -1,6 +1,7 @@
 package com.superdog.cloudnote.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.superdog.cloudnote.common.JwtUtil;
 import com.superdog.cloudnote.common.R;
 import com.superdog.cloudnote.pojo.User;
 import com.superdog.cloudnote.service.UserService;
@@ -14,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import java.util.HashMap;
+import java.util.Map;
 
 @Slf4j
 @RestController
@@ -46,7 +49,7 @@ public class UserController {
 
     @PostMapping("/login")
     @ApiOperation("登陆")
-    public R<User> login(@RequestBody User user){
+    public R<Map<String,Object>> login(@RequestBody User user){
         log.info("登陆请求-->{}",user.getUserName());
 
         //用户检测
@@ -62,6 +65,15 @@ public class UserController {
 
         log.info("登陆成功-->{}",user.getUserName());
 
-        return R.success(resultUser);
+        //设置载荷声明
+        Map<String,String> claim = new HashMap<>();
+        claim.put("userName", resultUser.getUserName());
+
+        //设置结果集
+        Map<String,Object> result = new HashMap<>();
+        result.put("user",resultUser);
+        result.put("token", JwtUtil.createToken(claim));
+
+        return R.success(result);
     }
 }

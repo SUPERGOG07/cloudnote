@@ -14,8 +14,6 @@ public class R<T> {
 
     private T data;
 
-    private Map map = new HashMap();
-
     public static <T> R<T> success(T object){
         R<T> r = new R<T>();
         r.status = 1;
