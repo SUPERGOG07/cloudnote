@@ -8,9 +8,9 @@ import java.util.Map;
 
 @Data
 public class R<T> {
-    private Integer code;
+    private Integer status;
 
-    private String msg;
+    private String error;
 
     private T data;
 
@@ -18,21 +18,23 @@ public class R<T> {
 
     public static <T> R<T> success(T object){
         R<T> r = new R<T>();
+        r.status = 1;
+        r.error = "";
         r.data = object;
-        r.code = 1;
         return r;
     }
 
-    public static <T> R<T> error(String msg){
-        R<T> r = new R<>();
-        r.code = 0;
-        r.msg = msg;
-
+    public static <T> R<T> error(String error){
+        R<T> r = new R<T>();
+        r.status = 1;
+        r.error = error;
         return r;
     }
 
-    public R<T> add(String key,String value){
-        this.map.put(key,value);
-        return this;
+    public static <T> R<T> error(Integer status,String error){
+        R<T> r = new R<T>();
+        r.status = status;
+        r.error = error;
+        return r;
     }
 }
