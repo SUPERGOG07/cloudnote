@@ -5,7 +5,6 @@ import com.superdog.cloudnote.common.JwtUtil;
 import com.superdog.cloudnote.common.R;
 import com.superdog.cloudnote.pojo.User;
 import com.superdog.cloudnote.service.UserService;
-import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.DigestUtils;
@@ -75,5 +74,6 @@ public class UserController {
         result.put("token", JwtUtil.createToken(claim));
 
         return R.success(result);
+
     }
 }

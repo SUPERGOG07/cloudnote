@@ -33,11 +33,11 @@ public class JwtUtil {
 
         //payload以及secret
         JWTCreator.Builder token = JWT.create()
-                .withHeader(header)         //头
-                .withIssuer(ISSUER)               //发行人
-                //.withClaim()                //声明信息
-                .withSubject("LOGIN_TOKEN") //主题
-                .withAudience()             //受众
+                .withHeader(header)                 //头
+                .withIssuer(ISSUER)                 //发行人
+                //.withClaim()                      //声明信息
+                .withSubject("LOGIN_TOKEN")         //主题
+                .withAudience()                     //受众
                 .withIssuedAt(instance.getTime())   //发行时间
                 .withExpiresAt(expires.getTime());
 
