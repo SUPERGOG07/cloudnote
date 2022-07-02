@@ -22,16 +22,15 @@ public class FileController {
 
     @PostMapping("/upload")
     public R<String> upload(@RequestParam(value = "uploadFile",required = false) MultipartFile file) throws IOException {
-        Map<String,String > result = FileUtil.uploadFile(file);
-        if(result.get("state").equals("false")){
-            return R.error(result.get("msg"));
+        Map<String,String > result1 = FileUtil.uploadFile(file);
+        if(result1.get("state").equals("false")){
+            return R.error(result1.get("msg"));
         }else {
-            if(HttpUtil.uploadFIleToSM(result.get("msg"))){
-                FileUtil.deleteFile(result.get("msg"));
-                return R.success(result.get("msg"));
+            Map<String,String> result2 = HttpUtil.uploadFIleToSM(result1.get("msg"));
+            if(result2.get("state").equals("false")){
+                return R.error(result2.get("msg"));
             }else {
-                FileUtil.deleteFile(result.get("msg"));
-                return R.error("上传图床失败");
+                return R.success(result2.get("msg"));
             }
         }
     }

@@ -15,6 +15,11 @@ import java.util.UUID;
 @Slf4j
 public class FileUtil {
 
+    /**
+     * 获得项目临时文件夹位置路径
+     * @return
+     * @throws IOException
+     */
     public static String getFileBasePath() throws IOException {
         File file = new File("");
 
@@ -26,6 +31,13 @@ public class FileUtil {
         return path;
     }
 
+    /**
+     * 将上传的文件存入临时文件夹里，然后用uuid随机命名文件
+     * 返回操作结果map，如果成功存入，则返回成功状态和文件名，操作失败则返回失败状态和失败原因
+     * @param file
+     * @return
+     * @throws IOException
+     */
     public static Map<String,String > uploadFile(MultipartFile file) throws IOException {
         Map<String,String> result = new HashMap<>();
         String basePath = null;
@@ -59,6 +71,11 @@ public class FileUtil {
         return result;
     }
 
+    /**
+     * 删除临时文件夹下的特定名称文件
+     * @param fileName
+     * @throws IOException
+     */
     public static void deleteFile(String fileName) throws IOException{
         File file = new File(new File("").getCanonicalPath()
                 +"\\src\\main\\resources\\templates\\"+fileName);

@@ -1,5 +1,6 @@
 package com.superdog.cloudnote.common;
 
+import com.alibaba.fastjson.JSONObject;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.ClientProtocolException;
@@ -14,11 +15,20 @@ import org.apache.http.util.EntityUtils;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.util.HashMap;
+import java.util.Map;
 
 @Slf4j
 public class HttpUtil {
-    public static boolean uploadFIleToSM(String fileName){
-        boolean flag = true;
+
+    /**
+     * 上传临时文件夹的特定文件到SM图库里
+     * 返回结果：成功返回成功状态以及文件url，失败则返回失败状态以及失败信息
+     * @param fileName
+     * @return
+     */
+    public static Map<String,String> uploadFIleToSM(String fileName){
+        Map<String ,String> result = new HashMap<>();
 
         CloseableHttpClient httpClient = HttpClients.createDefault();
 
@@ -42,22 +52,33 @@ public class HttpUtil {
                 log.info("----------------------------------------");
                 log.info(response.getStatusLine().toString());
                 if(response.getStatusLine().getStatusCode()!=200){
-                    flag = false;
+                    result.put("state","false");
+                    result.put("msg","接入图床失败");
                 }
                 HttpEntity resEntity = response.getEntity();
                 if (resEntity != null) {
-                    log.info(EntityUtils.toString(resEntity, Charset.defaultCharset()));
+                    String entityJson = EntityUtils.toString(resEntity, Charset.defaultCharset());
+                    log.info(entityJson);
+                    String url = JSONObject.parseObject(entityJson)
+                            .getObject("data", JSONObject.class).getString("url");
+                    log.info(url);
+                    result.put("state","success");
+                    result.put("msg",url);
                 }
+
                 EntityUtils.consume(resEntity);
             }  finally {
-                response.close();
+                log.info("----------------------------------------");
+                FileUtil.deleteFile(fileName);
             }
         } catch (ClientProtocolException e) {
             e.printStackTrace();
-            flag = false;
+            result.put("state","false");
+            result.put("msg","接入图床失败");
         } catch (IOException e) {
             e.printStackTrace();
-            flag = false;
+            result.put("state","false");
+            result.put("msg","接入图床失败");
         } finally {
             try {
                 httpClient.close();
@@ -65,7 +86,7 @@ public class HttpUtil {
                 e.printStackTrace();
             }
         }
-        return flag;
+        return result;
     }
 
 }
